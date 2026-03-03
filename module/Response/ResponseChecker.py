@@ -22,12 +22,14 @@ class ResponseChecker(Base):
         FAIL_DEGRADATION = "FAIL_DEGRADATION"
         LINE_ERROR_KANA = "LINE_ERROR_KANA"
         LINE_ERROR_HANGEUL = "LINE_ERROR_HANGEUL"
+        LINE_ERROR_CJK = "LINE_ERROR_CJK"
         LINE_ERROR_EMPTY_LINE = "LINE_ERROR_EMPTY_LINE"
         LINE_ERROR_SIMILARITY = "LINE_ERROR_SIMILARITY"
 
     LINE_ERROR: tuple[Error, ...] = (
         Error.LINE_ERROR_KANA,
         Error.LINE_ERROR_HANGEUL,
+        Error.LINE_ERROR_CJK,
         Error.LINE_ERROR_EMPTY_LINE,
         Error.LINE_ERROR_SIMILARITY,
     )
@@ -139,6 +141,15 @@ class ResponseChecker(Base):
                 and TextHelper.KO.any_hangeul(dst)
             ):
                 checks.append(__class__.Error.LINE_ERROR_HANGEUL)
+                continue
+
+            # 当目标语言非 CJK，且译文中包含汉字字符时，判断为 汉字残留
+            if (
+                self.config.check_cjk_residue
+                and not BaseLanguage.is_cjk(self.config.target_language)
+                and TextHelper.CJK.any(dst)
+            ):
+                checks.append(__class__.Error.LINE_ERROR_CJK)
                 continue
 
             # 判断是否包含或相似

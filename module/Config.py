@@ -53,6 +53,7 @@ class Config:
     clean_ruby: bool = False
     deduplication_in_trans: bool = True
     deduplication_in_bilingual: bool = True
+    check_cjk_residue: bool = True
     check_kana_residue: bool = True
     check_hangeul_residue: bool = True
     check_similarity: bool = True
@@ -151,6 +152,7 @@ class Config:
         self.clean_ruby: bool = True
         self.deduplication_in_trans: bool = True
         self.deduplication_in_bilingual: bool = True
+        self.check_cjk_residue: bool = True
         self.check_kana_residue: bool = True
         self.check_hangeul_residue: bool = True
         self.check_similarity: bool = True

@@ -86,9 +86,16 @@ class ExpertSettingsPage(Base, QWidget):
         action_check_hangeul.setCheckable(True)
         menu.addAction(action_check_hangeul)
 
+        action_check_cjk = Action(
+            Localizer.get().expert_settings_page_response_check_cjk_residue, self
+        )
+        action_check_cjk.setCheckable(True)
+        menu.addAction(action_check_cjk)
+
         def sync_action_checked(config: Config) -> None:
             action_check_kana.setChecked(config.check_kana_residue)
             action_check_hangeul.setChecked(config.check_hangeul_residue)
+            action_check_cjk.setChecked(config.check_cjk_residue)
             action_check_similarity.setChecked(config.check_similarity)
 
             action_check_kana.setIcon(
@@ -98,6 +105,9 @@ class ExpertSettingsPage(Base, QWidget):
                 BaseIcon.CIRCLE_CHECK
                 if config.check_hangeul_residue
                 else BaseIcon.CIRCLE
+            )
+            action_check_cjk.setIcon(
+                BaseIcon.CIRCLE_CHECK if config.check_cjk_residue else BaseIcon.CIRCLE
             )
             action_check_similarity.setIcon(
                 BaseIcon.CIRCLE_CHECK if config.check_similarity else BaseIcon.CIRCLE
@@ -115,6 +125,12 @@ class ExpertSettingsPage(Base, QWidget):
             config.save()
             sync_action_checked(config)
 
+        def on_check_cjk_triggered() -> None:
+            config = Config().load()
+            config.check_cjk_residue = action_check_cjk.isChecked()
+            config.save()
+            sync_action_checked(config)
+
         def on_check_similarity_triggered() -> None:
             config = Config().load()
             config.check_similarity = action_check_similarity.isChecked()
@@ -129,6 +145,7 @@ class ExpertSettingsPage(Base, QWidget):
         action_check_hangeul.triggered.connect(
             lambda checked: on_check_hangeul_triggered()
         )
+        action_check_cjk.triggered.connect(lambda checked: on_check_cjk_triggered())
         action_check_similarity.triggered.connect(
             lambda checked: on_check_similarity_triggered()
         )

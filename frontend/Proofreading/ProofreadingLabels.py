@@ -26,6 +26,7 @@ class ProofreadingLabels:
     @staticmethod
     def get_warning_label(warning: WarningType) -> str:
         mapping: dict[WarningType, str] = {
+            WarningType.CJK: Localizer.get().issue_cjk_residue,
             WarningType.KANA: Localizer.get().issue_kana_residue,
             WarningType.HANGEUL: Localizer.get().issue_hangeul_residue,
             WarningType.TEXT_PRESERVE: Localizer.get().proofreading_page_warning_text_preserve,
@@ -68,6 +69,10 @@ class ProofreadingLabels:
     @staticmethod
     def get_warning_tag_spec(warning: WarningType) -> tuple[str, StatusTagType]:
         mapping: dict[WarningType, tuple[str, StatusTagType]] = {
+            WarningType.CJK: (
+                Localizer.get().issue_cjk_residue,
+                StatusTagType.WARNING,
+            ),
             WarningType.KANA: (
                 Localizer.get().issue_kana_residue,
                 StatusTagType.WARNING,

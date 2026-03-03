@@ -194,6 +194,7 @@ class ProofreadingEditPanel(QWidget):
 
         self.warning_tags: dict[WarningType, StatusTag] = {}
         for warning in (
+            WarningType.CJK,
             WarningType.KANA,
             WarningType.HANGEUL,
             WarningType.TEXT_PRESERVE,

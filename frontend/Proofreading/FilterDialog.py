@@ -667,6 +667,10 @@ class FilterDialog(MessageBoxBase):
                 Localizer.get().proofreading_page_filter_no_warning,
             ),
             (
+                WarningType.CJK,
+                ProofreadingLabels.get_warning_label(WarningType.CJK),
+            ),
+            (
                 WarningType.KANA,
                 ProofreadingLabels.get_warning_label(WarningType.KANA),
             ),

@@ -15,6 +15,7 @@ from module.Utils.GapTool import GapTool
 class WarningType(StrEnum):
     """检查警告类型枚举"""
 
+    CJK = "CJK"  # 汉字残留
     KANA = "KANA"  # 假名残留
     HANGEUL = "HANGEUL"  # 谚文残留
     TEXT_PRESERVE = "TEXT_PRESERVE"  # 文本保护失效
@@ -117,6 +118,12 @@ class ResultChecker(Base):
         if self.config.source_language != BaseLanguage.Enum.KO:
             return False
         return TextHelper.KO.any_hangeul(self.normalize_dst_for_residue_check(item))
+
+    def has_cjk_error(self, item: Item) -> bool:
+        """检查目标语言非 CJK 时是否存在汉字残留"""
+        if BaseLanguage.is_cjk(self.config.target_language):
+            return False
+        return TextHelper.CJK.any(self.normalize_dst_for_residue_check(item))
 
     def normalize_dst_for_residue_check(self, item: Item) -> str:
         """构建残留检测输入，避免保护片段中的字符被误判为残留"""
@@ -276,6 +283,9 @@ class ResultChecker(Base):
         )
 
         # 4. 执行各项原子检查
+        if self.has_cjk_error(item):
+            warnings.append(WarningType.CJK)
+
         if self.has_kana_error(item):
             warnings.append(WarningType.KANA)
 
